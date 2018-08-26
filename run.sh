@@ -4,6 +4,7 @@
 
 docker stop laravel-dev
 docker rm laravel-dev
+mkdir -p "$PWD/dev/public"
 docker run -d --name laravel-dev \
   --user 1000001:0 \
   -p 80:8080 \
@@ -14,4 +15,5 @@ docker run -d --name laravel-dev \
   -e MYSQL_PASSWORD=January12018! \
   -e MYSQL_HOST=192.168.1.28 \
   -e MYSQL_PORT=3306 \
+  -v "$PWD"/dev:/home/apache/dev \
   carljmosca/laravel-dev:1.00

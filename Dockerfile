@@ -27,9 +27,6 @@ RUN chmod -R 775 /var/lock/httpd
 
 RUN sed -i 's/Listen 80/Listen 8080/g' /etc/httpd/conf/httpd.conf
 RUN sed -i 's/Listen 443/Listen 8443/g' /etc/httpd/conf.d/ssl.conf
-RUN sed -i 's|DocumentRoot \"/var/www/html\"|DocumentRoot \"/home/apache/dev/public\"|g' /etc/httpd/conf/httpd.conf
-RUN sed -i 's|/var/www/html|/home/apache/dev/public|g' /etc/httpd/conf/httpd.conf
-RUN sed -i 's|/var/www|/home/apache/dev/public|g' /etc/httpd/conf/httpd.conf
 
 RUN chmod g=u /etc/passwd
 
@@ -38,10 +35,12 @@ RUN chmod 555 /usr/local/bin/*
 
 RUN mkdir -p /home/apache/.composer/vendor/bin && \
     mkdir -p /home/apache/dev/public
-COPY image/.htaccess /home/apache/dev/public
 COPY image/.bash_profile /home/apache
 RUN chmod -R 775 /home/apache && \
     chown -R 1001:0 /home/apache
+
+RUN rmdir /var/www/html && \
+    ln -s /home/apache/dev/public /var/www/html
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
     php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
