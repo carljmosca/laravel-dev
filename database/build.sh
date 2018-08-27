@@ -1,0 +1,1 @@
+docker build -t carljmosca/laravel-db-dev:1.00 .

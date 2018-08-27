@@ -1,0 +1,31 @@
+version: '3'
+services:
+
+  laravel-app:
+    image: carljmosca/laravel-dev:1.00
+    build:
+      context: app/
+    links:
+      - laravel-db:db
+    ports:
+      - 80:8080
+      - 8443:8443
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_DATABASE=laravel_db
+      - MYSQL_USER=mysql
+      - MYSQL_PASSWORD=Password123!
+    volumes:
+      - ./app/dev:/home/apache/dev  
+    user: "1000001:0" 
+
+  laravel-db:
+    image: carljmosca/laravel-db-dev:1.00
+    build:
+        context: database/
+    environment:
+      - MYSQL_ROOT_PASSWORD=p4SSW0rd
+      - MYSQL_DATABASE=laravel_db
+      - MYSQL_USER=mysql
+      - MYSQL_PASSWORD=Password123!
+    user: "1000002:0"   
